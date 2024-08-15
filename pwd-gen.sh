@@ -35,3 +35,23 @@ LOWERCASE="abcdefghijklmnopqrstuvwxyz"
 UPPERCASE="ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 DIGITS="0123456789"
 SYMBOLS="!@#$%^&*()-_=+[]{}|;:,.<>?/~"
+
+# Construir a lista de caracteres permitidos
+CHAR_SET=$LOWERCASE
+[ "$USE_UPPERCASE" == true ] && CHAR_SET+=$UPPERCASE
+[ "$USE_DIGITS" == true ] && CHAR_SET+=$DIGITS
+[ "$USE_SYMBOLS" == true ] && CHAR_SET+=$SYMBOLS
+
+# Função para gerar a senha
+generate_password() {
+    tr -dc "$CHAR_SET" < /dev/urandom | head -c $LENGTH
+}
+
+# Gerar a senha
+PASSWORD=$(generate_password)
+
+# Exibir a senha gerada
+echo "Senha gerada: $PASSWORD"
+
+# Opcional: salvar a senha em um arquivo criptografado
+echo $PASSWORD | openssl enc -aes-256-cbc -e -base64 -out password.txt.enc -pass pass:yourpassword
